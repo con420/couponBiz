@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kakaomobility.couponbiz.mapper.CouponInfoMapper">
+
+    <resultMap id="CouponInfoResultMap" type="com.kakaomobility.couponbiz.model.CouponInfo">
+        <id property="couponInfoId" column="coupon_info_id"/>
+        <result property="discountType" column="discount_type"/>
+        <result property="discountValue" column="discount_value"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="expiredAt" column="expired_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="couponInfoId">
+        INSERT INTO coupon_info (
+            discount_type,
+            discount_value,
+            created_at,
+            expired_at,
+            updated_at
+        ) VALUES (
+            #{discountType},
+            #{discountValue},
+            #{createdAt},
+            #{expiredAt},
+            #{updatedAt}
+        )
+    </insert>
+
+    <select id="selectById" resultMap="CouponInfoResultMap">
+        SELECT * FROM coupon_info WHERE coupon_info_id = #{couponInfoId}
+    </select>
+
+    <select id="selectAll" resultMap="CouponInfoResultMap">
+        SELECT * FROM coupon_info
+    </select>
+
+    <update id="update">
+        UPDATE coupon_info
+        SET discount_type = #{discountType},
+            discount_value = #{discountValue},
+            expired_at = #{expiredAt},
+            updated_at = #{updatedAt}
+        WHERE coupon_info_id = #{couponInfoId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM coupon_info WHERE coupon_info_id = #{couponInfoId}
+    </delete>
+</mapper>

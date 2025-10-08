@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kakaomobility.couponbiz.mapper.CouponMapper">
+
+    <resultMap id="CouponResultMap" type="com.kakaomobility.couponbiz.model.Coupon">
+        <id property="couponId" column="coupon_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="couponCode" column="coupon_code"/>
+        <result property="issuedAt" column="issued_at"/>
+        <result property="status" column="status"/>
+        <result property="type" column="type"/>
+        <association property="couponInfo" resultMap="com.kakaomobility.couponbiz.mapper.CouponInfoMapper.CouponInfoResultMap"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="couponId">
+        INSERT INTO coupon (
+            coupon_info_id,
+            user_id,
+            coupon_code,
+            issued_at,
+            status,
+            type
+        ) VALUES (
+            #{couponInfo.couponInfoId},
+            #{userId},
+            #{couponCode},
+            #{issuedAt},
+            #{status},
+            #{type}
+        )
+    </insert>
+
+    <select id="selectByCouponCode" resultMap="CouponResultMap">
+        SELECT c.*, ci.*
+        FROM coupon c
+        LEFT JOIN coupon_info ci ON c.coupon_info_id = ci.coupon_info_id
+        WHERE c.coupon_code = #{couponCode}
+    </select>
+
+    <select id="selectById" resultMap="CouponResultMap">
+        SELECT c.*, ci.*
+        FROM coupon c
+        LEFT JOIN coupon_info ci ON c.coupon_info_id = ci.coupon_info_id
+        WHERE c.coupon_id = #{couponId}
+    </select>
+
+    <select id="selectByUserId" resultMap="CouponResultMap">
+        SELECT c.*, ci.*
+        FROM coupon c
+        LEFT JOIN coupon_info ci ON c.coupon_info_id = ci.coupon_info_id
+        WHERE c.user_id = #{userId}
+    </select>
+
+    <select id="selectByUserIdAndStatus" resultMap="CouponResultMap">
+        SELECT c.*, ci.*
+        FROM coupon c
+        LEFT JOIN coupon_info ci ON c.coupon_info_id = ci.coupon_info_id
+        WHERE c.user_id = #{userId}
+        AND c.status = #{status}
+    </select>
+
+    <select id="selectExpiredCoupons" resultMap="CouponResultMap">
+        SELECT c.*, ci.*
+        FROM coupon c
+        INNER JOIN coupon_info ci ON c.coupon_info_id = ci.coupon_info_id
+        WHERE c.status = 'ISSUED'
+        AND ci.expired_at &lt; #{now}
+    </select>
+
+    <update id="updateStatus">
+        UPDATE coupon
+        SET status = #{status}
+        WHERE coupon_id = #{couponId}
+    </update>
+
+    <update id="updateType">
+        UPDATE coupon
+        SET type = #{type}
+        WHERE coupon_id = #{couponId}
+    </update>
+</mapper>

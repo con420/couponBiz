@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: couponBiz
+  datasource:
+    url: jdbc:mysql://localhost:3306/couponbiz?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: pass02
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 30
+  type-aliases-package: com.kakaomobility.couponbiz.model

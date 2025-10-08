@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kakaomobility.couponbiz.mapper.CouponLogMapper">
+
+    <resultMap id="CouponLogResultMap" type="com.kakaomobility.couponbiz.model.CouponLog">
+        <id property="couponLogId" column="coupon_log_id"/>
+        <result property="discountApplied" column="discount_applied"/>
+        <result property="usedAt" column="used_at"/>
+        <result property="cancelledAt" column="cancelled_at"/>
+        <association property="coupon" resultMap="com.kakaomobility.couponbiz.mapper.CouponMapper.CouponResultMap"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="couponLogId">
+        INSERT INTO coupon_log (
+            coupon_id,
+            discount_applied,
+            used_at,
+            cancelled_at
+        ) VALUES (
+            #{coupon.couponId},
+            #{discountApplied},
+            #{usedAt},
+            #{cancelledAt}
+        )
+    </insert>
+
+    <select id="selectById" resultMap="CouponLogResultMap">
+        SELECT cl.*, c.*, ci.*
+        FROM coupon_log cl
+        LEFT JOIN coupon c ON cl.coupon_id = c.coupon_id
+        LEFT JOIN coupon_info ci ON c.coupon_info_id = ci.coupon_info_id
+        WHERE cl.coupon_log_id = #{couponLogId}
+    </select>
+
+    <select id="selectActiveByCouponId" resultMap="CouponLogResultMap">
+        SELECT cl.*, c.*, ci.*
+        FROM coupon_log cl
+        LEFT JOIN coupon c ON cl.coupon_id = c.coupon_id
+        LEFT JOIN coupon_info ci ON c.coupon_info_id = ci.coupon_info_id
+        WHERE cl.coupon_id = #{couponId}
+        AND cl.cancelled_at IS NULL
+        ORDER BY cl.coupon_log_id DESC
+        LIMIT 1
+    </select>
+
+    <update id="updateCancelledAt">
+        UPDATE coupon_log
+        SET cancelled_at = NOW()
+        WHERE coupon_log_id = #{couponLogId}
+    </update>
+</mapper>
