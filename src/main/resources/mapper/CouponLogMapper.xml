@@ -25,20 +25,22 @@
     </insert>
 
     <select id="selectById" resultMap="CouponLogResultMap">
-        SELECT cl.*, c.*, ci.*
-        FROM coupon_log cl
-        LEFT JOIN coupon c ON cl.coupon_id = c.coupon_id
-        LEFT JOIN coupon_info ci ON c.coupon_info_id = ci.coupon_info_id
+        SELECT *
+        FROM coupon_log cl, coupon c, coupon_info ci
         WHERE cl.coupon_log_id = #{couponLogId}
+        AND cl.coupon_id = c.coupon_id
+         AND c.coupon_info_id = ci.coupon_info_id
+
     </select>
 
     <select id="selectActiveByCouponId" resultMap="CouponLogResultMap">
-        SELECT cl.*, c.*, ci.*
-        FROM coupon_log cl
-        LEFT JOIN coupon c ON cl.coupon_id = c.coupon_id
-        LEFT JOIN coupon_info ci ON c.coupon_info_id = ci.coupon_info_id
+        SELECT *
+        FROM coupon_log cl, coupon c, coupon_info ci
         WHERE cl.coupon_id = #{couponId}
         AND cl.cancelled_at IS NULL
+        AND cl.used_at IS NULL
+        AND cl.coupon_id = c.coupon_id
+        AND c.coupon_info_id = ci.coupon_info_id
         ORDER BY cl.coupon_log_id DESC
         LIMIT 1
     </select>

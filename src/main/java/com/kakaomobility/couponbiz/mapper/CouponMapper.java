@@ -13,7 +13,7 @@ public interface CouponMapper {
     Coupon selectByCouponCode(String couponCode);
     List<Coupon> selectByUserId(Long userId);
     List<Coupon> selectByUserIdAndStatus(@Param("userId") Long userId, @Param("status") CouponStatus status);
-    List<Coupon> selectExpiredCoupons(LocalDateTime now);
     void updateStatus(Coupon coupon);
     void updateType(Coupon coupon);
+    List<Coupon> selectExpiredCoupons(LocalDateTime now);
 }

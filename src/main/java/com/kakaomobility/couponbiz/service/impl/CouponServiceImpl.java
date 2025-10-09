@@ -46,7 +46,7 @@ public class CouponServiceImpl implements CouponService {
     public Coupon issueCoupon(Long couponInfoId, Long userId) {
         CouponInfo info = couponInfoMapper.selectById(couponInfoId);
         if (info == null) {
-            throw new CouponNotFoundException("존재하지 않는 쿠폰 정보입니다. id=" + couponInfoId);
+            throw new CouponNotFoundException("존재하지 않는 쿠폰 정보입니다.");
         }
 
         String couponCode = CouponCodeGenerator.generate(12);
@@ -68,7 +68,7 @@ public class CouponServiceImpl implements CouponService {
     public Coupon getCoupon(String couponCode) {
         Coupon coupon = couponMapper.selectByCouponCode(couponCode);
         if (coupon == null) {
-            throw new CouponNotFoundException("존재하지 않는 쿠폰입니다. code=" + couponCode);
+            throw new CouponNotFoundException("존재하지 않는 쿠폰입니다.");
         }
         return coupon;
     }
@@ -119,6 +119,13 @@ public class CouponServiceImpl implements CouponService {
             coupon.expire();
             // TODO : 쿠폰 만료 실패 시 알람처리
             couponMapper.updateStatus(coupon);
+
+            // 쿠폰 만료 로그 생성
+            CouponLog log = CouponLog.builder()
+                    .coupon(coupon)
+                    .cancelledAt(LocalDateTime.now())
+                    .build();
+            couponLogMapper.insert(log);
         }
     }
 }

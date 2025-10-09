@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class CouponScheduler {
     private final CouponService couponService;
 
-    @Scheduled(cron = "0 0 0 * * *") // 매일 자정에 실행
+    @Scheduled(cron = " 0 */1 * * * *")
     public void processCouponExpiration() {
         couponService.expireCoupons();
     }

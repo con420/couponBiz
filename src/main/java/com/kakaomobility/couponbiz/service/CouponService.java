@@ -37,6 +37,17 @@ public interface CouponService {
      * @return 쿠폰 사용 로그
      */
     CouponLog useCoupon(String couponCode, Long userId, int originalAmount);
+
+    /**
+     * 사용자 쿠폰 리스트 조회
+     * @param userId 사용자 ID
+     * @param status 조회할 쿠폰 타입(CouponStatus)
+     * @return 쿠폰 리스트
+     */
     List<Coupon> getUserCoupons(Long userId, CouponStatus status);
+
+    /**
+     * 만료된 쿠폰 상태를 EXPIRED로 변경
+     */
     void expireCoupons();
 }

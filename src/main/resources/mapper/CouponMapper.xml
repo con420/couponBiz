@@ -31,40 +31,32 @@
     </insert>
 
     <select id="selectByCouponCode" resultMap="CouponResultMap">
-        SELECT c.*, ci.*
-        FROM coupon c
-        LEFT JOIN coupon_info ci ON c.coupon_info_id = ci.coupon_info_id
-        WHERE c.coupon_code = #{couponCode}
+        SELECT *
+        FROM coupon c, coupon_info ci
+        WHERE c.coupon_info_id = ci.coupon_info_id
+        AND c.coupon_code = #{couponCode}
     </select>
 
     <select id="selectById" resultMap="CouponResultMap">
-        SELECT c.*, ci.*
-        FROM coupon c
-        LEFT JOIN coupon_info ci ON c.coupon_info_id = ci.coupon_info_id
-        WHERE c.coupon_id = #{couponId}
+        SELECT *
+        FROM coupon c, coupon_info ci
+        WHERE c.coupon_info_id = ci.coupon_info_id
+        AND c.coupon_id = #{couponId}
     </select>
 
     <select id="selectByUserId" resultMap="CouponResultMap">
-        SELECT c.*, ci.*
-        FROM coupon c
-        LEFT JOIN coupon_info ci ON c.coupon_info_id = ci.coupon_info_id
-        WHERE c.user_id = #{userId}
+        SELECT *
+        FROM coupon c, coupon_info ci
+        WHERE c.coupon_info_id = ci.coupon_info_id
+        AND c.user_id = #{userId}
     </select>
 
     <select id="selectByUserIdAndStatus" resultMap="CouponResultMap">
-        SELECT c.*, ci.*
-        FROM coupon c
-        LEFT JOIN coupon_info ci ON c.coupon_info_id = ci.coupon_info_id
-        WHERE c.user_id = #{userId}
+        SELECT *
+        FROM coupon c, coupon_info ci
+        WHERE c.coupon_info_id = ci.coupon_info_id
+        AND c.user_id = #{userId}
         AND c.status = #{status}
-    </select>
-
-    <select id="selectExpiredCoupons" resultMap="CouponResultMap">
-        SELECT c.*, ci.*
-        FROM coupon c
-        INNER JOIN coupon_info ci ON c.coupon_info_id = ci.coupon_info_id
-        WHERE c.status = 'ISSUED'
-        AND ci.expired_at &lt; #{now}
     </select>
 
     <update id="updateStatus">
@@ -78,4 +70,13 @@
         SET type = #{type}
         WHERE coupon_id = #{couponId}
     </update>
+
+
+    <select id="selectExpiredCoupons" resultMap="CouponResultMap">
+        SELECT *
+        FROM coupon c, coupon_info ci
+        WHERE c.coupon_info_id = ci.coupon_info_id
+        AND c.status = 'ISSUED'
+        AND ci.expired_at &lt; #{now}
+    </select>
 </mapper>

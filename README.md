@@ -1,12 +1,17 @@
-### 기술 스택
-- Spring Boot 3.2.0
-- MyBatis 3.0.3
-- MySQL 8.0
+# Coupon API 개발과제
+
+## 기술 스택
 - Java 17
-- Gradle 8.x
+- Spring Boot 3.2.0
+- MyBatis
+- MySQL
+- Gradle
 - Lombok
 
-### db 스키마
+## 기술 선택 배경
+JPA 기반 구현이 권장되었으나, 개인적으로 JPA에 대한 숙련도가 부족하여 보다 익숙한 Mybatis 를 사용했습니다.
+
+## db 스키마
 1. coupon_info (쿠폰 정보)
    - coupon_info_id BIGINT PK
    - discount_type VARCHAR(10) [FIXED/RATE]
@@ -61,7 +66,7 @@ CREATE TABLE coupon_log (
     coupon_log_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     coupon_id BIGINT NOT NULL,
     discount_applied INT NOT NULL,
-    used_at DATETIME NOT NULL,
+    used_at DATETIME,
     cancelled_at DATETIME,
     FOREIGN KEY (coupon_id) REFERENCES coupon(coupon_id)
 );
@@ -69,9 +74,9 @@ CREATE TABLE coupon_log (
 2. 프로젝트 실행
 ./gradlew bootRun
 
-## API 테스트 (Windows 환경)
+## API 테스트
 
-1. 쿠폰 정보 생성 (관리자)
+1. 쿠폰 정보 생성
 curl -X POST "http://localhost:8080/api/admin/coupons/info" ^
   -H "Content-Type: application/json" ^
   -d "{\"discountType\":\"FIXED\",\"discountValue\":10000,\"expiredAt\":\"2025-12-31T23:59:59\"}"
@@ -87,7 +92,8 @@ curl -X GET "http://localhost:8080/api/coupons/ZPDYSSXXC5RS"
 4. 쿠폰 사용
 curl -X POST "http://localhost:8080/api/coupons/ABC123456789" ^
   -H "Content-Type: application/json" ^
-  -d "{\"userId\":2,\"originalAmount\":20000}"
+  -d "{\"userId\":1,\"originalAmount\":20000}"
 
-5. 사용자 보유 쿠폰 목록 조회
-curl -X GET "http://localhost:8080/api/coupons/user/1?status=ISSUED"
+5. 사용자 보유 쿠폰 목록 조회 (status는 선택)
+curl -X GET "http://localhost:8080/api/coupons/user/1"
+
