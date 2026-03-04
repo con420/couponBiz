@@ -11,6 +11,7 @@ import java.util.List;
 public interface CouponMapper {
     void insert(Coupon coupon);
     Coupon selectByCouponCode(String couponCode);
+    Coupon selectByCouponCodeForUpdate(String couponCode); // ← 비관적 잠금용
     List<Coupon> selectByUserId(Long userId);
     List<Coupon> selectByUserIdAndStatus(@Param("userId") Long userId, @Param("status") CouponStatus status);
     void updateStatus(Coupon coupon);

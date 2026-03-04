@@ -32,9 +32,18 @@
 
     <select id="selectByCouponCode" resultMap="CouponResultMap">
         SELECT *
-        FROM coupon c, coupon_info ci
-        WHERE c.coupon_info_id = ci.coupon_info_id
-        AND c.coupon_code = #{couponCode}
+        FROM coupon c
+        INNER JOIN coupon_info ci ON c.coupon_info_id = ci.coupon_info_id
+        WHERE c.coupon_code = #{couponCode}
+    </select>
+
+    <!-- 비관적 잠금: 쿠폰 사용 시 동시성 문제 방지 -->
+    <select id="selectByCouponCodeForUpdate" resultMap="CouponResultMap">
+        SELECT *
+        FROM coupon c
+        INNER JOIN coupon_info ci ON c.coupon_info_id = ci.coupon_info_id
+        WHERE c.coupon_code = #{couponCode}
+        FOR UPDATE
     </select>
 
     <select id="selectById" resultMap="CouponResultMap">

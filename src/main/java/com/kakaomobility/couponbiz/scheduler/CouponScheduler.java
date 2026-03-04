@@ -10,7 +10,19 @@ import org.springframework.stereotype.Component;
 public class CouponScheduler {
     private final CouponService couponService;
 
-    @Scheduled(cron = " 0 */1 * * * *")
+    /**
+     * 만료된 쿠폰 자동 처리
+     * Cron 표현식: 0 */1 * * * *
+     * - 초: 0초
+     * - 분: 매 1분마다 (*/1)
+     * - 시간: 모든 시간 (*)
+     * - 날짜: 모든 날짜 (*)
+     * - 월: 모든 월 (*)
+     * - 요일: 모든 요일 (*)
+     *
+     * 결과: 매 1분마다 실행됨
+     */
+    @Scheduled(cron = "0 */1 * * * *")  // ✅ 공백 제거됨
     public void processCouponExpiration() {
         couponService.expireCoupons();
     }

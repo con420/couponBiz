@@ -76,7 +76,9 @@ public class CouponServiceImpl implements CouponService {
     @Override
     @Transactional
     public CouponLog useCoupon(String couponCode, Long userId, int orderAmount) {
-        Coupon coupon = couponMapper.selectByCouponCode(couponCode);
+        // 🔒 비관적 잠금(Pessimistic Locking): SELECT ... FOR UPDATE
+        // 이 트랜잭션이 완료될 때까지 다른 트랜잭션이 같은 쿠폰을 수정하지 못하도록 잠금
+        Coupon coupon = couponMapper.selectByCouponCodeForUpdate(couponCode);
         if (coupon == null) {
             throw new CouponNotFoundException("존재하지 않는 쿠폰입니다");
         }
